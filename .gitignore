@@ -1,50 +1,35 @@
 ```
-# Compiled and build artifacts
-*.class
-*.o
-*.obj
-*.out
-build/
+# Java/Maven
 target/
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
 
-# Dependencies
-.gradle/
-.m2/
-lib/
-node_modules/
-venv/
-.venv/
-__pycache__/
-*.egg-info/
+# Compiled class files
+*.class
 
-# Logs and temp files
+# Package files
+*.jar
+*.war
+*.ear
+
+# Log files
 *.log
-*.tmp
-*.swp
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
+# IDE
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# OS specific
+# Environment
+.env
+.env.local
+.env.*
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Archives
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
+# Test reports
+test-results/
 ```

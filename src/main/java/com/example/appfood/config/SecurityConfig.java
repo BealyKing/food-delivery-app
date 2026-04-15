@@ -35,8 +35,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth/**", "/h2-console/**", "/", "/index.html", "/api/public/**").permitAll()
+                        .requestMatchers("/auth/**", "/h2-console/**", "/", "/index.html", "/css/**", "/js/**", "/api/public/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/courier/**").hasAnyRole("COURIER", "ADMIN")
                         .requestMatchers("/api/customer/**").hasAnyRole("CUSTOMER", "COURIER", "ADMIN")
