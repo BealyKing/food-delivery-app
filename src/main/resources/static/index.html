@@ -1,15 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Food Delivery App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery App - Главная</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>✅ Backend запущен!</h1>
-    <p>Эндпоинты:</p>
-    <ul>
-        <li><a href="/auth/register">POST /auth/register</a></li>
-        <li><a href="/auth/login">POST /auth/login</a></li>
-        <li><a href="/h2-console">H2 Console</a></li>
-    </ul>
+    <div class="container">
+        <header>
+            <h1>🍕 Food Delivery App</h1>
+            <nav id="nav-menu" style="display: none;">
+                <span id="user-info"></span>
+                <button onclick="logout()">Выйти</button>
+            </nav>
+        </header>
+
+        <!-- Блок авторизации -->
+        <div id="auth-section">
+            <div class="auth-container">
+                <h2>Вход в систему</h2>
+                <form id="login-form">
+                    <input type="text" id="login-username" placeholder="Логин" required>
+                    <input type="password" id="login-password" placeholder="Пароль" required>
+                    <button type="submit">Войти</button>
+                </form>
+                <p>Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a></p>
+            </div>
+
+            <div class="auth-container" id="register-section" style="display: none;">
+                <h2>Регистрация</h2>
+                <form id="register-form">
+                    <input type="text" id="register-username" placeholder="Логин" required>
+                    <input type="password" id="register-password" placeholder="Пароль" required>
+                    <button type="submit">Зарегистрироваться</button>
+                </form>
+                <p>Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a></p>
+            </div>
+        </div>
+
+        <!-- Основной контент (после входа) -->
+        <div id="main-content" style="display: none;">
+            <section id="profile-section">
+                <h2>Профиль пользователя</h2>
+                <div id="user-profile"></div>
+            </section>
+
+            <section id="data-section">
+                <h2>Работа с данными</h2>
+                
+                <div class="data-card">
+                    <h3>📋 Получить всех пользователей (ADMIN)</h3>
+                    <button onclick="getAllUsers()">Получить пользователей</button>
+                    <pre id="users-result"></pre>
+                </div>
+
+                <div class="data-card">
+                    <h3>🛒 Заказы (CUSTOMER)</h3>
+                    <button onclick="getCustomerOrders()">Мои заказы</button>
+                    <button onclick="createOrder()">Создать заказ</button>
+                    <pre id="orders-result"></pre>
+                </div>
+
+                <div class="data-card">
+                    <h3>🚚 Заказы курьера (COURIER)</h3>
+                    <button onclick="getCourierOrders()">Заказы на доставку</button>
+                    <pre id="courier-orders-result"></pre>
+                </div>
+
+                <div class="data-card">
+                    <h3>❌ Удалить пользователя (ADMIN)</h3>
+                    <input type="number" id="delete-user-id" placeholder="ID пользователя">
+                    <button onclick="deleteUser()">Удалить</button>
+                    <pre id="delete-result"></pre>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="/js/app.js"></script>
 </body>
 </html>
