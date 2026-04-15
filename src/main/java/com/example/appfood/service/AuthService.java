@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import com.example.appfood.dto.RegisterRequest;
 import com.example.appfood.model.Role;
 import com.example.appfood.model.User;
 import com.example.appfood.repository.UserRepository;
+import com.example.appfood.util.JwtTokenProvider;
 
 @Service
 public class AuthService {
@@ -25,6 +27,9 @@ public class AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
      /**
      * Регистрация нового пользователя.
@@ -57,30 +62,28 @@ public class AuthService {
     /**
      * Вход пользователя.
      * Проверяет логин и пароль через AuthenticationManager.
+     * Возвращает JWT-токен при успешной аутентификации.
      *
      * @param request Данные для входа.
-     * @return Сообщение об успехе.
+     * @return JWT-токен.
      */
     public String login(LoginRequest request) {
-    // 1. Создаём объект аутентификации с данными из запроса (логин и пароль).
-    // Это внутренний объект Spring Security, НЕ токен для клиента.
-    UsernamePasswordAuthenticationToken authToken =
-         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+        // 1. Создаём объект аутентификации с данными из запроса (логин и пароль).
+        UsernamePasswordAuthenticationToken authToken =
+             new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
 
-    // 2. Проверяем логин и пароль через Spring Security.
-    // authenticationManager проверит, существует ли пользователь,
-    // и совпадает ли введённый пароль с зашифрованным в БД.
-    Authentication authentication = authenticationManager.authenticate(authToken);
+        // 2. Проверяем логин и пароль через Spring Security.
+        Authentication authentication = authenticationManager.authenticate(authToken);
 
-    // 3. Если аутентификация успешна, устанавливаем результат в SecurityContext.
-    // Это позволяет Spring Security "помнить", кто вошёл в систему в рамках текущего запроса.
-    // В реальных приложениях это часто используется с сессиями.
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+        // 3. Если аутентификация успешна, устанавливаем результат в SecurityContext.
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    // 4. Возвращаем сообщение об успешном входе.
-    // Мы НЕ генерируем и НЕ возвращаем JWT-токен или что-то подобное.
-    return "Login successful";
-}
+        // 4. Загружаем userDetails для генерации токена
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        // 5. Генерируем и возвращаем JWT-токен
+        return jwtTokenProvider.generateToken(userDetails);
+    }
 
 
 }

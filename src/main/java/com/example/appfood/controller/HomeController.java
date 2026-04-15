@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "index"; // ищет src/main/resources/templates/index.html (если используется Thymeleaf)
+        return "redirect:/index.html"; // перенаправление на статическую страницу
     }
 }
