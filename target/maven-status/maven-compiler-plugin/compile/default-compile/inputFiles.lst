@@ -1,0 +1,11 @@
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\AppfoodApplication.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\config\SecurityConfig.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\controller\AuthController.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\controller\HomeController.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\dto\LoginRequest.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\dto\RegisterRequest.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\model\Role.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\model\User.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\repository\UserRepository.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\service\AuthService.java
+D:\food-delivery-app\appfood\backend\src\main\java\com\example\appfood\service\UserService.java

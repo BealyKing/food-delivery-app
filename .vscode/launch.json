@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AppfoodApplication<appfood>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.appfood.AppfoodApplication",
+            "projectName": "appfood",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
