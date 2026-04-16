@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery - Администратор</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Панель администратора</h1>
+            <nav id="nav-menu">
+                <span id="user-info"></span>
+                <button onclick="logout()">Выйти</button>
+            </nav>
+        </header>
+
+        <section id="admin-section">
+            <h2>Управление пользователями и заказами</h2>
+            
+            <div class="data-card">
+                <h4>📋 Получить всех пользователей</h4>
+                <button onclick="getAllUsers()">Получить пользователей</button>
+                <pre id="users-result"></pre>
+            </div>
+
+            <div class="data-card">
+                <h4>✏️ Изменить роль пользователя</h4>
+                <input type="number" id="update-role-user-id" placeholder="ID пользователя" required>
+                <select id="user-role-select">
+                    <option value="CUSTOMER">CUSTOMER</option>
+                    <option value="COURIER">COURIER</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+                <button onclick="updateUserRole()">Изменить роль</button>
+                <pre id="update-role-result"></pre>
+            </div>
+
+            <div class="data-card">
+                <h4>📦 Все заказы</h4>
+                <button onclick="getAllOrders()">Получить все заказы</button>
+                <pre id="all-orders-result"></pre>
+            </div>
+
+            <div class="data-card">
+                <h4>❌ Удалить пользователя</h4>
+                <input type="number" id="delete-user-id" placeholder="ID пользователя">
+                <button onclick="deleteUser()">Удалить</button>
+                <pre id="delete-result"></pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>
