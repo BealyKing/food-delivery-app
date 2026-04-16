@@ -1,12 +1,10 @@
 package com.example.appfood.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.appfood.dto.LoginRequest;
@@ -23,9 +21,6 @@ public class AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -33,7 +28,7 @@ public class AuthService {
 
      /**
      * Регистрация нового пользователя.
-     * Хэширует пароль и сохраняет пользователя.
+     * Сохраняет пользователя с паролем в открытом виде.
      *
      * @param request Данные регистрации.
      * @return Сообщение об успехе.
@@ -46,8 +41,8 @@ public class AuthService {
          // 2. Устанавливаем имя пользователя из запроса
          user.setUsername(request.getUsername());
 
-         // 3. Хэшируем пароль и устанавливаем его
-         user.setPassword(passwordEncoder.encode(request.getPassword()));
+         // 3. Устанавливаем пароль без хэширования
+         user.setPassword(request.getPassword());
 
          // 4. Устанавливаем роль по умолчанию
          user.setRole(Role.CUSTOMER);
