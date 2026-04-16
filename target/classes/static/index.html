@@ -11,5 +11,143 @@
 </head>
 <body>
     <p>Перенаправление на страницу входа...</p>
+    <div class="container">
+        <header>
+            <h1>🍕 Food Delivery App</h1>
+            <nav id="nav-menu" style="display: none;">
+                <span id="user-info"></span>
+                <button onclick="logout()">Выйти</button>
+            </nav>
+        </header>
+
+        <!-- Блок авторизации -->
+        <div id="auth-section">
+            <div class="auth-container">
+                <h2>Вход в систему</h2>
+                <form id="login-form">
+                    <input type="text" id="login-username" placeholder="Логин" required>
+                    <input type="password" id="login-password" placeholder="Пароль" required>
+                    <button type="submit">Войти</button>
+                </form>
+                <p>Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a></p>
+            </div>
+
+            <div class="auth-container" id="register-section" style="display: none;">
+                <h2>Регистрация</h2>
+                <form id="register-form">
+                    <input type="text" id="register-username" placeholder="Логин" required>
+                    <input type="password" id="register-password" placeholder="Пароль" required>
+                    <button type="submit">Зарегистрироваться</button>
+                </form>
+                <p>Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a></p>
+            </div>
+        </div>
+
+        <!-- Основной контент (после входа) -->
+        <div id="main-content" style="display: none;">
+            <section id="profile-section">
+                <h2>Профиль пользователя</h2>
+                <div id="user-profile"></div>
+            </section>
+
+            <section id="data-section">
+                <h2>Работа с данными</h2>
+                
+                <!-- Секция ADMIN -->
+                <div class="admin-section">
+                    <h3>🔐 Администратор</h3>
+                    
+                    <div class="data-card">
+                        <h4>📋 Получить всех пользователей</h4>
+                        <button onclick="getAllUsers()">Получить пользователей</button>
+                        <pre id="users-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>✏️ Изменить роль пользователя</h4>
+                        <input type="number" id="update-role-user-id" placeholder="ID пользователя" required>
+                        <select id="user-role-select">
+                            <option value="CUSTOMER">CUSTOMER</option>
+                            <option value="COURIER">COURIER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                        <button onclick="updateUserRole()">Изменить роль</button>
+                        <pre id="update-role-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>📦 Все заказы (ADMIN)</h4>
+                        <button onclick="getAllOrders()">Получить все заказы</button>
+                        <pre id="all-orders-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>❌ Удалить пользователя</h4>
+                        <input type="number" id="delete-user-id" placeholder="ID пользователя">
+                        <button onclick="deleteUser()">Удалить</button>
+                        <pre id="delete-result"></pre>
+                    </div>
+                </div>
+
+                <!-- Секция CUSTOMER -->
+                <div class="customer-section">
+                    <h3>👤 Клиент</h3>
+                    
+                    <div class="data-card">
+                        <h4>📄 Мой профиль</h4>
+                        <button onclick="getCustomerProfile()">Получить профиль</button>
+                        <pre id="profile-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>🛒 Мои заказы</h4>
+                        <button onclick="getCustomerOrders()">Мои заказы</button>
+                        <button onclick="createOrder()">Создать заказ</button>
+                        <pre id="orders-result"></pre>
+                    </div>
+                </div>
+
+                <!-- Секция COURIER -->
+                <div class="courier-section">
+                    <h3>🚚 Курьер</h3>
+                    
+                    <div class="data-card">
+                        <h4>📦 Заказы на доставку</h4>
+                        <button onclick="getCourierOrders()">Заказы на доставку</button>
+                        <pre id="courier-orders-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>✅ Взять заказ</h4>
+                        <input type="number" id="take-order-id" placeholder="ID заказа">
+                        <button onclick="takeOrder()">Взять заказ</button>
+                        <pre id="take-order-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>🔄 Обновить статус заказа</h4>
+                        <input type="number" id="update-status-order-id" placeholder="ID заказа">
+                        <select id="order-status-select">
+                            <option value="PENDING">PENDING</option>
+                            <option value="CONFIRMED">CONFIRMED</option>
+                            <option value="PREPARING">PREPARING</option>
+                            <option value="READY">READY</option>
+                            <option value="DELIVERING">DELIVERING</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                        <button onclick="updateOrderStatus()">Обновить статус</button>
+                        <pre id="update-status-result"></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="/js/app.js"></script>
 </body>
 </html>

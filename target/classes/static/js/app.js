@@ -254,3 +254,152 @@ async function deleteUser() {
         resultEl.className = 'error';
     }
 }
+
+// Получить профиль клиента
+async function getCustomerProfile() {
+    const resultEl = document.getElementById('profile-result');
+    try {
+        const response = await fetch('/api/customer/profile', {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.text();
+            resultEl.textContent = data;
+            resultEl.className = 'success';
+        } else {
+            resultEl.textContent = 'Ошибка: ' + await response.text();
+            resultEl.className = 'error';
+        }
+    } catch (error) {
+        resultEl.textContent = 'Ошибка: ' + error.message;
+        resultEl.className = 'error';
+    }
+}
+
+// Изменить роль пользователя (ADMIN)
+async function updateUserRole() {
+    const userId = document.getElementById('update-role-user-id').value;
+    const role = document.getElementById('user-role-select').value;
+    const resultEl = document.getElementById('update-role-result');
+    
+    if (!userId) {
+        resultEl.textContent = 'Введите ID пользователя';
+        resultEl.className = 'error';
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/admin/users/${userId}/role?role=${role}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            resultEl.textContent = JSON.stringify(data, null, 2);
+            resultEl.className = 'success';
+        } else {
+            resultEl.textContent = 'Ошибка: ' + await response.text();
+            resultEl.className = 'error';
+        }
+    } catch (error) {
+        resultEl.textContent = 'Ошибка: ' + error.message;
+        resultEl.className = 'error';
+    }
+}
+
+// Получить все заказы (ADMIN)
+async function getAllOrders() {
+    const resultEl = document.getElementById('all-orders-result');
+    try {
+        const response = await fetch('/api/admin/orders', {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            resultEl.textContent = JSON.stringify(data, null, 2);
+            resultEl.className = 'success';
+        } else {
+            resultEl.textContent = 'Ошибка: ' + await response.text();
+            resultEl.className = 'error';
+        }
+    } catch (error) {
+        resultEl.textContent = 'Ошибка: ' + error.message;
+        resultEl.className = 'error';
+    }
+}
+
+// Взять заказ курьером (COURIER)
+async function takeOrder() {
+    const orderId = document.getElementById('take-order-id').value;
+    const resultEl = document.getElementById('take-order-result');
+    
+    if (!orderId) {
+        resultEl.textContent = 'Введите ID заказа';
+        resultEl.className = 'error';
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/courier/orders/${orderId}/take`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            resultEl.textContent = JSON.stringify(data, null, 2);
+            resultEl.className = 'success';
+        } else {
+            resultEl.textContent = 'Ошибка: ' + await response.text();
+            resultEl.className = 'error';
+        }
+    } catch (error) {
+        resultEl.textContent = 'Ошибка: ' + error.message;
+        resultEl.className = 'error';
+    }
+}
+
+// Обновить статус заказа (COURIER)
+async function updateOrderStatus() {
+    const orderId = document.getElementById('update-status-order-id').value;
+    const status = document.getElementById('order-status-select').value;
+    const resultEl = document.getElementById('update-status-result');
+    
+    if (!orderId) {
+        resultEl.textContent = 'Введите ID заказа';
+        resultEl.className = 'error';
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/courier/orders/${orderId}/status?status=${status}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            resultEl.textContent = JSON.stringify(data, null, 2);
+            resultEl.className = 'success';
+        } else {
+            resultEl.textContent = 'Ошибка: ' + await response.text();
+            resultEl.className = 'error';
+        }
+    } catch (error) {
+        resultEl.textContent = 'Ошибка: ' + error.message;
+        resultEl.className = 'error';
+    }
+}
