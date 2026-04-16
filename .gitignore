@@ -1,1 +1,30 @@
-Nothing should be ignored in this case, as only a Java source file was modified and no build artifacts, dependencies, or temporary files were included in the changes.
+```
+# Compiled and build artifacts
+*.class
+target/
+
+# Dependencies
+.m2/
+.gradle/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Maven specific
+target/
+!target/
+```
