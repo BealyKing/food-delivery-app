@@ -27,7 +27,7 @@ public class AuthService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-     /**
+    /**
      * Регистрация нового пользователя.
      * Сохраняет пользователя с паролем в открытом виде.
      *
@@ -45,8 +45,22 @@ public class AuthService {
          // 3. Устанавливаем пароль без хэширования
          user.setPassword(request.getPassword());
 
-         // 4. Устанавливаем роль по умолчанию
-         user.setRole(Role.CUSTOMER);
+         // 4. Проверяем, не пытается ли пользователь зарегистрироваться как ADMIN
+         if (request.getRole() == Role.ADMIN) {
+             // Проверяем, есть ли уже администратор
+             long adminCount = userRepository.findAll().stream()
+                     .filter(u -> u.getRole() == Role.ADMIN)
+                     .count();
+             if (adminCount > 0) {
+                 return "Error: Admin role is already taken. Only one admin is allowed.";
+             }
+             user.setRole(Role.ADMIN);
+         } else if (request.getRole() == Role.COURIER) {
+             user.setRole(Role.COURIER);
+         } else {
+             // По умолчанию CUSTOMER
+             user.setRole(Role.CUSTOMER);
+         }
 
          // 5. Сохраняем пользователя в базе данных
          userRepository.save(user);
