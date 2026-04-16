@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Delivery App - Главная</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>Food Delivery App</title>
+    <script>
+        // Перенаправление на страницу входа
+        window.location.href = '/login.html';
+    </script>
 </head>
 <body>
+    <p>Перенаправление на страницу входа...</p>
     <div class="container">
         <header>
             <h1>🍕 Food Delivery App</h1>
@@ -49,30 +53,92 @@
             <section id="data-section">
                 <h2>Работа с данными</h2>
                 
-                <div class="data-card">
-                    <h3>📋 Получить всех пользователей (ADMIN)</h3>
-                    <button onclick="getAllUsers()">Получить пользователей</button>
-                    <pre id="users-result"></pre>
+                <!-- Секция ADMIN -->
+                <div class="admin-section">
+                    <h3>🔐 Администратор</h3>
+                    
+                    <div class="data-card">
+                        <h4>📋 Получить всех пользователей</h4>
+                        <button onclick="getAllUsers()">Получить пользователей</button>
+                        <pre id="users-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>✏️ Изменить роль пользователя</h4>
+                        <input type="number" id="update-role-user-id" placeholder="ID пользователя" required>
+                        <select id="user-role-select">
+                            <option value="CUSTOMER">CUSTOMER</option>
+                            <option value="COURIER">COURIER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                        <button onclick="updateUserRole()">Изменить роль</button>
+                        <pre id="update-role-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>📦 Все заказы (ADMIN)</h4>
+                        <button onclick="getAllOrders()">Получить все заказы</button>
+                        <pre id="all-orders-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>❌ Удалить пользователя</h4>
+                        <input type="number" id="delete-user-id" placeholder="ID пользователя">
+                        <button onclick="deleteUser()">Удалить</button>
+                        <pre id="delete-result"></pre>
+                    </div>
                 </div>
 
-                <div class="data-card">
-                    <h3>🛒 Заказы (CUSTOMER)</h3>
-                    <button onclick="getCustomerOrders()">Мои заказы</button>
-                    <button onclick="createOrder()">Создать заказ</button>
-                    <pre id="orders-result"></pre>
+                <!-- Секция CUSTOMER -->
+                <div class="customer-section">
+                    <h3>👤 Клиент</h3>
+                    
+                    <div class="data-card">
+                        <h4>📄 Мой профиль</h4>
+                        <button onclick="getCustomerProfile()">Получить профиль</button>
+                        <pre id="profile-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>🛒 Мои заказы</h4>
+                        <button onclick="getCustomerOrders()">Мои заказы</button>
+                        <button onclick="createOrder()">Создать заказ</button>
+                        <pre id="orders-result"></pre>
+                    </div>
                 </div>
 
-                <div class="data-card">
-                    <h3>🚚 Заказы курьера (COURIER)</h3>
-                    <button onclick="getCourierOrders()">Заказы на доставку</button>
-                    <pre id="courier-orders-result"></pre>
-                </div>
+                <!-- Секция COURIER -->
+                <div class="courier-section">
+                    <h3>🚚 Курьер</h3>
+                    
+                    <div class="data-card">
+                        <h4>📦 Заказы на доставку</h4>
+                        <button onclick="getCourierOrders()">Заказы на доставку</button>
+                        <pre id="courier-orders-result"></pre>
+                    </div>
 
-                <div class="data-card">
-                    <h3>❌ Удалить пользователя (ADMIN)</h3>
-                    <input type="number" id="delete-user-id" placeholder="ID пользователя">
-                    <button onclick="deleteUser()">Удалить</button>
-                    <pre id="delete-result"></pre>
+                    <div class="data-card">
+                        <h4>✅ Взять заказ</h4>
+                        <input type="number" id="take-order-id" placeholder="ID заказа">
+                        <button onclick="takeOrder()">Взять заказ</button>
+                        <pre id="take-order-result"></pre>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>🔄 Обновить статус заказа</h4>
+                        <input type="number" id="update-status-order-id" placeholder="ID заказа">
+                        <select id="order-status-select">
+                            <option value="PENDING">PENDING</option>
+                            <option value="CONFIRMED">CONFIRMED</option>
+                            <option value="PREPARING">PREPARING</option>
+                            <option value="READY">READY</option>
+                            <option value="DELIVERING">DELIVERING</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                        <button onclick="updateOrderStatus()">Обновить статус</button>
+                        <pre id="update-status-result"></pre>
+                    </div>
                 </div>
             </section>
         </div>

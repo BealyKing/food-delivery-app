@@ -17,7 +17,7 @@ import com.example.appfood.util.JwtTokenProvider;
 
 @Service
 public class AuthService {
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -35,38 +35,43 @@ public class AuthService {
      * @return Сообщение об успехе.
      */
 
-    public String register(RegisterRequest request){
-        //1. Создаем новый объект User
+    public String register(RegisterRequest request) {
+        // 1. Создаем новый объект User
         User user = new User();
-        
-         // 2. Устанавливаем имя пользователя из запроса
-         user.setUsername(request.getUsername());
 
-         // 3. Устанавливаем пароль без хэширования
-         user.setPassword(request.getPassword());
+        // 2. Устанавливаем имя пользователя из запроса
+        user.setUsername(request.getUsername());
 
-         // 4. Проверяем, не пытается ли пользователь зарегистрироваться как ADMIN
-         if (request.getRole() == Role.ADMIN) {
-             // Проверяем, есть ли уже администратор
-             long adminCount = userRepository.findAll().stream()
-                     .filter(u -> u.getRole() == Role.ADMIN)
-                     .count();
-             if (adminCount > 0) {
-                 return "Error: Admin role is already taken. Only one admin is allowed.";
-             }
-             user.setRole(Role.ADMIN);
-         } else if (request.getRole() == Role.COURIER) {
-             user.setRole(Role.COURIER);
-         } else {
-             // По умолчанию CUSTOMER
-             user.setRole(Role.CUSTOMER);
-         }
+        // 3. Устанавливаем пароль без хэширования
+        user.setPassword(request.getPassword());
 
-         // 5. Сохраняем пользователя в базе данных
-         userRepository.save(user);
+        // 4. Логика установки роли
+        Role requestedRole = request.getRole();
 
-         // 6. Возвращаем сообщение об успешной регистрации
-         return "User registered successfully";
+        // Если роль явно передана и это CUSTOMER или COURIER, используем её
+        if (requestedRole == Role.CUSTOMER) {
+            user.setRole(Role.CUSTOMER);
+        } else if (requestedRole == Role.COURIER) {
+            user.setRole(Role.COURIER);
+        } else if (requestedRole == Role.ADMIN) {
+            // Проверка для ADMIN остается прежней
+            long adminCount = userRepository.findAll().stream()
+                    .filter(u -> u.getRole() == Role.ADMIN)
+                    .count();
+            if (adminCount > 0) {
+                return "Error: Admin role is already taken. Only one admin is allowed.";
+            }
+            user.setRole(Role.ADMIN);
+        } else {
+            // Если роль не передана или null, по умолчанию CUSTOMER
+            user.setRole(Role.CUSTOMER);
+        }
+
+        // 5. Сохраняем пользователя в базе данных
+        userRepository.save(user);
+
+        // 6. Возвращаем сообщение об успешной регистрации
+        return "User registered successfully";
     }
 
     /**
@@ -79,8 +84,8 @@ public class AuthService {
      */
     public String login(LoginRequest request) {
         // 1. Создаём объект аутентификации с данными из запроса (логин и пароль).
-        UsernamePasswordAuthenticationToken authToken =
-             new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(request.getUsername(),
+                request.getPassword());
 
         // 2. Проверяем логин и пароль через Spring Security.
         Authentication authentication = authenticationManager.authenticate(authToken);
@@ -94,6 +99,5 @@ public class AuthService {
         // 5. Генерируем и возвращаем JWT-токен
         return jwtTokenProvider.generateToken(userDetails);
     }
-
 
 }
