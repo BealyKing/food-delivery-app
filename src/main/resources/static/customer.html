@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery - Клиент</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👤 Кабинет клиента</h1>
+            <nav id="nav-menu">
+                <span id="user-info"></span>
+                <button onclick="logout()">Выйти</button>
+            </nav>
+        </header>
+
+        <section id="customer-section">
+            <h2>Мои заказы и профиль</h2>
+            
+            <div class="data-card">
+                <h4>📄 Мой профиль</h4>
+                <button onclick="getCustomerProfile()">Получить профиль</button>
+                <pre id="profile-result"></pre>
+            </div>
+
+            <div class="data-card">
+                <h4>🛒 Мои заказы</h4>
+                <button onclick="getCustomerOrders()">Мои заказы</button>
+                <button onclick="createOrder()">Создать заказ</button>
+                <pre id="orders-result"></pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="/js/customer.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery - Вход</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍕 Food Delivery App</h1>
+        </header>
+
+        <div class="auth-container">
+            <h2>Вход в систему</h2>
+            <form id="login-form">
+                <input type="text" id="login-username" placeholder="Логин" required>
+                <input type="password" id="login-password" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+            <p>Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a></p>
+        </div>
+
+        <div class="auth-container" id="register-section" style="display: none;">
+            <h2>Регистрация</h2>
+            <form id="register-form">
+                <input type="text" id="register-username" placeholder="Логин" required>
+                <input type="password" id="register-password" placeholder="Пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <p>Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a></p>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="/js/auth.js"></script>
+</body>
+</html>
