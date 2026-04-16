@@ -3,6 +3,13 @@ let authToken = localStorage.getItem('authToken') || null;
 
 // Проверка авторизации при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
+    // Если мы уже на странице логина, не нужно никуда перенаправлять при отсутствии токена
+    const currentPath = window.location.pathname;
+    if (currentPath.includes('login.html') || currentPath === '/' || currentPath === '') {
+        return; 
+    }
+
+    // Если токена нет, а мы на защищенной странице -> идем на логин
     if (!authToken) {
         window.location.href = '/login.html';
         return;
@@ -10,24 +17,63 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Получаем информацию о пользователе из токена
     const tokenPayload = decodeJWT(authToken);
-    const role = tokenPayload.role;
     
+    // Логирование для отладки (нажмите F12 в браузере, чтобы увидеть payload)
+    console.log('JWT Payload:', tokenPayload);
+
+    const role = extractRole(tokenPayload);
+    
+    if (!role) {
+        console.error('Роль не найдена в токене!', tokenPayload);
+        logout();
+        return;
+    }
+
     // Перенаправляем на соответствующую страницу в зависимости от роли
-    switch(role) {
-        case 'ADMIN':
-            window.location.href = '/admin.html';
-            break;
-        case 'CUSTOMER':
-            window.location.href = '/customer.html';
-            break;
-        case 'COURIER':
-            window.location.href = '/courier.html';
-            break;
-        default:
-            alert('Неизвестная роль пользователя');
-            logout();
+    // Проверка текущего пути, чтобы не перезагружать страницу лишний раз
+    const expectedPath = getExpectedPath(role);
+    if (expectedPath && currentPath !== expectedPath) {
+        window.location.href = expectedPath;
     }
 });
+
+// Функция извлечения роли из разных возможных полей JWT
+function extractRole(payload) {
+    // Вариант 1: Прямое поле 'role' (часто используется в кастомных токенах)
+    if (payload.role) return payload.role;
+    
+    // Вариант 2: Поле 'roles' (массив или строка)
+    if (payload.roles) {
+        if (Array.isArray(payload.roles)) return payload.roles[0];
+        return payload.roles;
+    }
+
+    // Вариант 3: Стандарт Spring Security 'authorities' (массив объектов или строк)
+    if (payload.authorities) {
+        if (Array.isArray(payload.authorities)) {
+            const auth = payload.authorities[0];
+            // Если это объект { authority: "ROLE_ADMIN" }
+            if (typeof auth === 'object' && auth.authority) return auth.authority;
+            // Если это просто строка "ROLE_ADMIN"
+            return auth;
+        }
+    }
+
+    return null;
+}
+
+// Маппинг ролей на пути
+function getExpectedPath(role) {
+    // Удаляем префикс ROLE_, если он есть, для сравнения
+    const cleanRole = role.replace('ROLE_', '');
+    
+    switch(cleanRole) {
+        case 'ADMIN': return '/admin.html';
+        case 'CUSTOMER': return '/customer.html';
+        case 'COURIER': return '/courier.html';
+        default: return null;
+    }
+}
 
 // Переключение между входом и регистрацией
 function showRegister() {
@@ -62,24 +108,25 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             
             // Декодируем токен для получения роли
             const tokenPayload = decodeJWT(authToken);
-            const role = tokenPayload.role;
+            console.log('Получен токен с payload:', tokenPayload);
             
-            // Перенаправляем на соответствующую страницу
-            switch(role) {
-                case 'ADMIN':
-                    window.location.href = '/admin.html';
-                    break;
-                case 'CUSTOMER':
-                    window.location.href = '/customer.html';
-                    break;
-                case 'COURIER':
-                    window.location.href = '/courier.html';
-                    break;
-                default:
-                    alert('Неизвестная роль пользователя');
+            const role = extractRole(tokenPayload);
+            
+            if (!role) {
+                alert('Ошибка: В токене отсутствует роль. Проверьте бэкенд.');
+                console.error('Роль не найдена в полученном токене');
+                return;
+            }
+
+            const targetPath = getExpectedPath(role);
+            if (targetPath) {
+                window.location.href = targetPath;
+            } else {
+                alert('Неизвестная роль пользователя: ' + role);
             }
         } else {
-            alert('Ошибка входа: неверный логин или пароль');
+            const errorText = await response.text();
+            alert('Ошибка входа: ' + (errorText || 'неверный логин или пароль'));
         }
     } catch (error) {
         console.error('Error:', error);
@@ -88,26 +135,39 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 });
 
 // Обработка формы регистрации
+// Обработка формы регистрации
 document.getElementById('register-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const username = document.getElementById('register-username').value;
     const password = document.getElementById('register-password').value;
+    const roleValue = document.getElementById('register-role').value;
     
+    if (!roleValue) {
+        alert('Пожалуйста, выберите роль');
+        return;
+    }
+
     try {
         const response = await fetch('/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, password })
+            // Отправляем объект с полем role
+            body: JSON.stringify({ 
+                username, 
+                password, 
+                role: roleValue 
+            })
         });
         
         if (response.ok) {
             alert('Регистрация успешна! Теперь войдите в систему.');
             showLogin();
         } else {
-            alert('Ошибка регистрации: ' + await response.text());
+            const errorText = await response.text();
+            alert('Ошибка регистрации: ' + errorText);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -125,13 +185,20 @@ function logout() {
 // Декодирование JWT токена
 function decodeJWT(token) {
     try {
-        const base64Url = token.split('.')[1];
+        if (!token) return {};
+        const parts = token.split('.');
+        if (parts.length !== 3) throw new Error('Invalid token');
+        
+        const base64Url = parts[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
+        
         return JSON.parse(jsonPayload);
     } catch (e) {
+        console.error('Ошибка декодирования JWT:', e);
         return {};
     }
 }

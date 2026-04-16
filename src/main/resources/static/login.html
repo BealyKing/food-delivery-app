@@ -22,11 +22,21 @@
             <p>Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a></p>
         </div>
 
-        <div class="auth-container" id="register-section" style="display: none;">
+       <div class="auth-container" id="register-section" style="display: none;">
             <h2>Регистрация</h2>
             <form id="register-form">
                 <input type="text" id="register-username" placeholder="Логин" required>
                 <input type="password" id="register-password" placeholder="Пароль" required>
+                
+                <!-- Добавлен выбор роли -->
+                <select id="register-role" required style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                    <option value="" disabled selected>Выберите роль</option>
+                    <option value="CUSTOMER">Клиент (Customer)</option>
+                    <option value="COURIER">Курьер (Courier)</option>
+                    <!-- Опцию ADMIN можно скрыть или оставить, проверка есть на бэкенде -->
+                    <option value="ADMIN">Администратор (Admin)</option>
+                </select>
+
                 <button type="submit">Зарегистрироваться</button>
             </form>
             <p>Уже есть аккаунт? <a href="#" onclick="showLogin()">Войти</a></p>

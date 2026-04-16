@@ -1,4 +1,3 @@
-
 package com.example.appfood.config;
 
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -37,8 +36,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth/**", "/h2-console/**", "/", "/index.html", "/css/**", "/js/**",
-                                "/api/public/**")
+                        // Добавлены login.html, admin.html, customer.html, courier.html в список разрешенных
+                        .requestMatchers("/auth/**", "/h2-console/**", "/", "/index.html", 
+                                "/login.html", "/admin.html", "/customer.html", "/courier.html",
+                                "/css/**", "/js/**", "/api/public/**")
                         .permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/courier/**").hasAnyRole("COURIER", "ADMIN")
