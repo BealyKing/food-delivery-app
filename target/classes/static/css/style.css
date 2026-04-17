@@ -6,13 +6,17 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     min-height: 100vh;
     padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 500px;
+    width: 100%;
     margin: 0 auto;
     background: white;
     border-radius: 15px;
@@ -94,11 +98,11 @@ input[type="number"] {
 
 input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #f5576c;
 }
 
 button[type="submit"] {
-    background: #667eea;
+    background: #f5576c;
     color: white;
     border: none;
     padding: 12px 20px;
@@ -110,7 +114,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background: #5568d3;
+    background: #e0455a;
 }
 
 .auth-container p {
@@ -120,7 +124,7 @@ button[type="submit"]:hover {
 }
 
 .auth-container a {
-    color: #667eea;
+    color: #f5576c;
     text-decoration: none;
     font-weight: bold;
 }
@@ -141,7 +145,7 @@ section h2 {
     color: #333;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #667eea;
+    border-bottom: 2px solid #f5576c;
 }
 
 .data-card {
@@ -158,7 +162,7 @@ section h2 {
 }
 
 .data-card button {
-    background: #667eea;
+    background: #f5576c;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -170,7 +174,7 @@ section h2 {
 }
 
 .data-card button:hover {
-    background: #5568d3;
+    background: #e0455a;
 }
 
 .data-card input {
