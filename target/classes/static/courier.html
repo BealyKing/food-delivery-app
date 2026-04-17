@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery - Курьер</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚚 Панель курьера</h1>
+            <nav id="nav-menu">
+                <span id="user-info"></span>
+                <button onclick="logout()">Выйти</button>
+            </nav>
+        </header>
+
+        <section id="courier-section">
+            <h2>Управление доставками</h2>
+            
+            <div class="data-card">
+                <h4>📦 Заказы на доставку</h4>
+                <button onclick="getCourierOrders()">Заказы на доставку</button>
+                <pre id="courier-orders-result"></pre>
+            </div>
+
+            <div class="data-card">
+                <h4>✅ Взять заказ</h4>
+                <input type="number" id="take-order-id" placeholder="ID заказа">
+                <button onclick="takeOrder()">Взять заказ</button>
+                <pre id="take-order-result"></pre>
+            </div>
+
+            <div class="data-card">
+                <h4>🔄 Обновить статус заказа</h4>
+                <input type="number" id="update-status-order-id" placeholder="ID заказа">
+                <select id="order-status-select">
+                    <option value="PENDING">PENDING</option>
+                    <option value="CONFIRMED">CONFIRMED</option>
+                    <option value="PREPARING">PREPARING</option>
+                    <option value="READY">READY</option>
+                    <option value="DELIVERING">DELIVERING</option>
+                    <option value="DELIVERED">DELIVERED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+                <button onclick="updateOrderStatus()">Обновить статус</button>
+                <pre id="update-status-result"></pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <script src="/js/courier.js"></script>
+</body>
+</html>
