@@ -1,6 +1,5 @@
 package com.example.appfood.config;
 
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import com.example.appfood.filter.JwtAuthFilter;
 import com.example.appfood.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Конфигурация безопасности Spring Security.
- */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -36,14 +33,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(authz -> authz
-                        // Добавлены login.html, admin.html, customer.html, courier.html в список разрешенных
-                        .requestMatchers("/auth/**", "/h2-console/**", "/", "/index.html", 
+                        // Разрешаем доступ к логину, статике и H2
+                        .requestMatchers("/auth/**", "/h2-console/**", "/", "/index.html",
                                 "/login.html", "/admin.html", "/customer.html", "/courier.html",
-                                "/css/**", "/js/**", "/api/public/**")
+                                "/css/**", "/js/**", "/images/**")
                         .permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/courier/**").hasAnyRole("COURIER", "ADMIN")
-                        .requestMatchers("/api/customer/**").hasAnyRole("CUSTOMER", "COURIER", "ADMIN")
+
+                        // ВАЖНО: Разрешаем доступ к меню ВСЕМ (или авторизованным)
+                        // Добавляем эту строку перед правилами для admin/customer
+                        .requestMatchers("/api/menu/**").permitAll()
+                        // Или если хотите только для авторизованных:
+                        // .requestMatchers("/api/menu/**").authenticated()
+
+                        // Остальные правила
+                        .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+                        .requestMatchers("/api/courier/**")
+                        .hasAnyAuthority("COURIER", "ROLE_COURIER", "ADMIN", "ROLE_ADMIN")
+                        .requestMatchers("/api/customer/**")
+                        .hasAnyAuthority("CUSTOMER", "ROLE_CUSTOMER", "COURIER", "ROLE_COURIER", "ADMIN", "ROLE_ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -58,6 +65,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        return NoOpPasswordEncoder.getInstance();
     }
 }

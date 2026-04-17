@@ -4,47 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Delivery - Курьер</title>
+    <!-- Убедись, что путь к CSS правильный -->
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Дополнительные стили прямо здесь для быстрого старта */
+        .order-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .order-card h4 { margin-top: 0; color: #333; }
+        .order-items { list-style: none; padding: 0; font-size: 0.9em; color: #555; }
+        .order-items li { border-bottom: 1px solid #eee; padding: 4px 0; }
+        .actions { margin-top: 15px; display: flex; gap: 10px; }
+        button { cursor: pointer; padding: 8px 12px; border: none; border-radius: 4px; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .error { color: red; font-weight: bold; }
+        .columns { display: flex; gap: 20px; flex-wrap: wrap; }
+        .column { flex: 1; min-width: 300px; }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🚚 Панель курьера</h1>
             <nav id="nav-menu">
-                <span id="user-info"></span>
-                <button onclick="logout()">Выйти</button>
+                <span id="user-info">Загрузка...</span>
+                <button onclick="logout()" class="btn-danger">Выйти</button>
             </nav>
         </header>
 
-        <section id="courier-section">
-            <h2>Управление доставками</h2>
-            
-            <div class="data-card">
-                <h4>📦 Заказы на доставку</h4>
-                <button onclick="getCourierOrders()">Заказы на доставку</button>
-                <pre id="courier-orders-result"></pre>
-            </div>
+        <main class="columns">
+            <!-- Колонка доступных заказов -->
+            <section class="column">
+                <h2>📦 Доступные заказы</h2>
+                <p>Заказы, которые еще никто не взял.</p>
+                <button onclick="loadAvailableOrders()" style="margin-bottom: 10px;">Обновить список</button>
+                <div id="available-orders-list">
+                    <p>Загрузка...</p>
+                </div>
+            </section>
 
+            <!-- Колонка моих заказов -->
+            <section class="column">
+                <h2>🛵 Мои заказы</h2>
+                <p>Заказы, которые вы взяли в работу.</p>
+                <button onclick="loadMyOrders()" style="margin-bottom: 10px;">Обновить список</button>
+                <div id="my-orders-list">
+                    <p>Загрузка...</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Секция для ручного ввода (если вдруг понадобится протестировать конкретный ID) -->
+        <section style="margin-top: 30px; border-top: 1px solid #ccc; pt: 20px;">
+            <h3>Ручное управление (для тестов)</h3>
             <div class="data-card">
-                <h4>✅ Взять заказ</h4>
+                <h4>✅ Взять заказ по ID</h4>
                 <input type="number" id="take-order-id" placeholder="ID заказа">
-                <button onclick="takeOrder()">Взять заказ</button>
+                <button onclick="takeOrder(document.getElementById('take-order-id').value)">Взять</button>
                 <pre id="take-order-result"></pre>
             </div>
 
             <div class="data-card">
-                <h4>🔄 Обновить статус заказа</h4>
+                <h4>🔄 Обновить статус вручную</h4>
                 <input type="number" id="update-status-order-id" placeholder="ID заказа">
                 <select id="order-status-select">
-                    <option value="PENDING">PENDING</option>
-                    <option value="CONFIRMED">CONFIRMED</option>
-                    <option value="PREPARING">PREPARING</option>
-                    <option value="READY">READY</option>
-                    <option value="DELIVERING">DELIVERING</option>
+                    <option value="NEW">NEW</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
                     <option value="DELIVERED">DELIVERED</option>
                     <option value="CANCELLED">CANCELLED</option>
                 </select>
-                <button onclick="updateOrderStatus()">Обновить статус</button>
+                <button onclick="updateOrderStatus(document.getElementById('update-status-order-id').value, document.getElementById('order-status-select').value)">Обновить</button>
                 <pre id="update-status-result"></pre>
             </div>
         </section>

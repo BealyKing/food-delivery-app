@@ -5,51 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Delivery - Администратор</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Стили для табов */
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
+        .tab-btn { padding: 10px 20px; background: #f1f1f1; border: none; cursor: pointer; font-size: 1em; border-radius: 5px 5px 0 0; }
+        .tab-btn.active { background: #fff; border-bottom: 2px solid white; margin-bottom: -2px; font-weight: bold; color: #ff6b6b; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s; }
+
+        /* Таблицы */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; color: #333; }
+        tr:hover { background: #f1f1f1; }
+
+        /* Формы */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .btn-sm { padding: 5px 10px; font-size: 0.85em; }
+        .btn-danger { background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; color: white; }
+        .status-NEW { background: #ffc107; color: #333; }
+        .status-IN_PROGRESS { background: #17a2b8; }
+        .status-DELIVERED { background: #28a745; }
+        .status-CANCELLED { background: #dc3545; }
+        .badge[class*="CUSTOMER"] { background: #6f42c1; }
+        .badge[class*="COURIER"] { background: #fd7e14; }
+        .badge[class*="ADMIN"] { background: #343a40; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🔐 Панель администратора</h1>
             <nav id="nav-menu">
-                <span id="user-info"></span>
-                <button onclick="logout()">Выйти</button>
+                <span id="user-info">Загрузка...</span>
+                <button onclick="logout()" class="btn-danger btn-sm">Выйти</button>
             </nav>
         </header>
 
-        <section id="admin-section">
-            <h2>Управление пользователями и заказами</h2>
-            
-            <div class="data-card">
-                <h4>📋 Получить всех пользователей</h4>
-                <button onclick="getAllUsers()">Получить пользователей</button>
-                <pre id="users-result"></pre>
+        <main>
+            <!-- Навигация по вкладкам -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('users')">Пользователи</button>
+                <button class="tab-btn" onclick="switchTab('orders')">Заказы</button>
+                <button class="tab-btn" onclick="switchTab('menu')">Меню (Категории и Еда)</button>
             </div>
 
-            <div class="data-card">
-                <h4>✏️ Изменить роль пользователя</h4>
-                <input type="number" id="update-role-user-id" placeholder="ID пользователя" required>
-                <select id="user-role-select">
-                    <option value="CUSTOMER">CUSTOMER</option>
-                    <option value="COURIER">COURIER</option>
-                    <option value="ADMIN">ADMIN</option>
-                </select>
-                <button onclick="updateUserRole()">Изменить роль</button>
-                <pre id="update-role-result"></pre>
-            </div>
+            <!-- Вкладка: Пользователи -->
+            <section id="tab-users" class="tab-content active">
+                <h2>Управление пользователями</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Логин</th>
+                            <th>Роль</th>
+                            <th>Email</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="5">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </section>
 
-            <div class="data-card">
-                <h4>📦 Все заказы</h4>
-                <button onclick="getAllOrders()">Получить все заказы</button>
-                <pre id="all-orders-result"></pre>
-            </div>
+            <!-- Вкладка: Заказы -->
+            <section id="tab-orders" class="tab-content">
+                <h2>Все заказы системы</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Клиент</th>
+                            <th>Курьер</th>
+                            <th>Статус</th>
+                            <th>Сумма</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <tr><td colspan="6">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </section>
 
-            <div class="data-card">
-                <h4>❌ Удалить пользователя</h4>
-                <input type="number" id="delete-user-id" placeholder="ID пользователя">
-                <button onclick="deleteUser()">Удалить</button>
-                <pre id="delete-result"></pre>
-            </div>
-        </section>
+            <!-- Вкладка: Меню -->
+            <section id="tab-menu" class="tab-content">
+                <h2>Управление меню</h2>
+                
+                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                    <!-- Категории -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <h3>Категории</h3>
+                        <div class="form-group" style="display: flex; gap: 10px;">
+                            <input type="text" id="new-cat-name" placeholder="Название категории">
+                            <button class="btn-primary" onclick="addCategory()">Добавить</button>
+                        </div>
+                        <table>
+                            <thead><tr><th>ID</th><th>Название</th><th>Действия</th></tr></thead>
+                            <tbody id="categories-table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Еда -->
+                    <div style="flex: 2; min-width: 400px;">
+                        <h3>Товары (Еда)</h3>
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <h4>Добавить новое блюдо</h4>
+                            <div class="form-group"><input type="text" id="food-name" placeholder="Название блюда"></div>
+                            <div class="form-group"><textarea id="food-desc" placeholder="Описание" rows="2"></textarea></div>
+                            <div style="display: flex; gap: 10px;">
+                                <div class="form-group" style="flex:1"><input type="number" id="food-price" placeholder="Цена (₽)"></div>
+                                <div class="form-group" style="flex:2"><select id="food-cat-select"><option value="">Выберите категорию</option></select></div>
+                            </div>
+                            <div class="form-group"><input type="text" id="food-img" placeholder="URL картинки (необязательно)"></div>
+                            <button class="btn-primary" onclick="addFood()">Сохранить блюдо</button>
+                        </div>
+
+                        <table>
+                            <thead><tr><th>ID</th><th>Название</th><th>Категория</th><th>Цена</th><th>Описание</th><th>Действия</th></tr></thead>
+                            <tbody id="food-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
 
         <footer>
             <p>&copy; 2024 Food Delivery App. Все права защищены.</p>
@@ -57,5 +146,21 @@
     </div>
 
     <script src="/js/admin.js"></script>
+    <script>
+        function switchTab(tabName) {
+            // Скрыть все контенты
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            // Показать нужный
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // Подсветить кнопку (ищем по тексту или индексу, здесь упрощенно через event)
+            const buttons = document.querySelectorAll('.tab-btn');
+            if(tabName === 'users') buttons[0].classList.add('active');
+            if(tabName === 'orders') buttons[1].classList.add('active');
+            if(tabName === 'menu') buttons[2].classList.add('active');
+        }
+    </script>
 </body>
 </html>
