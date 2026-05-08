@@ -4,24 +4,27 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     min-height: 100vh;
-    padding: 20px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 }
 
 .container {
-    max-width: 500px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    margin: 0 auto;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    overflow: hidden;
+    max-width: 100%;
 }
 
 header {
@@ -58,20 +61,22 @@ nav button:hover {
 }
 
 #auth-section {
-    padding: 40px 30px;
+    flex: 1;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 30px;
-    flex-wrap: wrap;
+    padding: 20px;
 }
 
 .auth-container {
     background: #f8f9fa;
-    padding: 30px;
+    padding: 40px;
     border-radius: 10px;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 20px auto;
 }
 
 .auth-container h2 {
@@ -134,7 +139,9 @@ button[type="submit"]:hover {
 }
 
 #main-content {
+    flex: 1;
     padding: 30px;
+    overflow-y: auto;
 }
 
 section {
